@@ -5,6 +5,7 @@ import (
 	"desktop/internal/api"
 	"desktop/internal/handlers"
 	"desktop/internal/viewModels"
+	"fmt"
 )
 
 type App struct {
@@ -28,15 +29,6 @@ func (a *App) GetLoginPageHTML(errMsg string) string {
 	return a.Auth.GetLoginPageHTML(errMsg)
 }
 
-//func (a *App) DoLogin(user, pass string) string {
-//	fmt.Println("do login")
-//	res, err := a.Auth.Login(user, pass)
-//	if err != nil {
-//		return err.Error()
-//	}
-//	return "success:" + res.UserName
-//}
-
 func (a *App) DoLogin(user, pass string) viewModels.LoginResult {
 	res, err := a.Auth.Login(user, pass)
 
@@ -50,4 +42,8 @@ func (a *App) DoLogin(user, pass string) viewModels.LoginResult {
 		User:    res.UserName,
 		Token:   res.Token,
 	}
+}
+func (a *App) SetToken(token string) {
+	a.Auth.API.Token = token
+	fmt.Println("Köhnə token bərpa edildi.")
 }

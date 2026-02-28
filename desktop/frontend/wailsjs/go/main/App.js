@@ -9,3 +9,7 @@ export function DoLogin(arg1, arg2) {
 export function GetLoginPageHTML(arg1) {
   return window['go']['main']['App']['GetLoginPageHTML'](arg1);
 }
+
+export function SetToken(arg1) {
+  return window['go']['main']['App']['SetToken'](arg1);
+}

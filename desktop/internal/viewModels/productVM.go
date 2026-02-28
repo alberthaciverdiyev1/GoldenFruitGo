@@ -1,11 +1,28 @@
 package viewModels
 
-type ProductListRequest struct {
-	Name  string
-	Price float64
+type ProductListVM struct {
+	Name         string
+	Quantity     int
+	BuyingPrice  float64
+	SellingPrice float64
+	Weight       float64
+	Stock        int
 }
-type ProductUpdateRequest struct {
+type ProductUpdateVM struct {
+	Id           uint64
+	Name         string
+	Quantity     int
+	BuyingPrice  float64
+	SellingPrice float64
+	Weight       float64
+	Stock        int
 }
 
-type ProductListVM struct {
+type ProductCreateVM struct {
+	Name         string
+	Quantity     int
+	BuyingPrice  float64
+	SellingPrice float64
+	Weight       float64
+	Stock        int
 }
