@@ -1,0 +1,153 @@
+package customer
+
+import (
+	"desktop/internal/viewModels"
+	"fmt"
+)
+
+templ Details(c viewModels.CustomerDetailsVM) {
+	<div class="w-full h-full p-4 lg:p-8 space-y-8 bg-[#f8fafc] min-h-screen animate-in fade-in slide-in-from-bottom-8 duration-700">
+		<div class="flex flex-col md:flex-row justify-between items-end md:items-center gap-6">
+			<div class="space-y-1">
+				<div class="flex items-center gap-3">
+					<button onclick="window.loadCustomers()" class="group p-2 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all shadow-sm">
+						<span class="block group-hover:-translate-x-1 transition-transform">{ "←" }</span>
+					</button>
+					<h1 class="text-4xl font-black text-slate-900 tracking-tighter italic uppercase">{ c.Name } { c.Surname }</h1>
+				</div>
+				<div class="flex items-center gap-6 ml-12 text-slate-400 font-medium text-sm">
+					<span>{ "● " + c.Phone }</span>
+					<span>{ "● " + c.Address }</span>
+				</div>
+			</div>
+			<div class="flex items-center gap-3">
+				<button onclick={ templ.SafeScript(fmt.Sprintf("window.openDebtPayment(%d)", c.ID)) } class="px-6 py-4 bg-emerald-500 text-white font-black rounded-2xl shadow-lg shadow-emerald-100 hover:bg-emerald-600 hover:-translate-y-1 transition-all active:scale-95">
+					{ "ÖDƏNİŞ QƏBUL ET" }
+				</button>
+				<button { templ.Attributes{ "onclick": fmt.Sprintf("window.openCustomerForm(%d)", c.ID) }... } class="px-6 py-4 bg-white border-2 border-slate-900 text-slate-900 font-black rounded-2xl hover:bg-slate-900 hover:text-white transition-all active:scale-95">
+					{ "REDAKTƏ" }
+				</button>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+			<div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
+				<p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{ "Cari Borc" }</p>
+				<p class="text-3xl font-black text-red-500 mt-2">{ fmt.Sprintf("%.2f ₼", c.Debt) }</p>
+				<div class="mt-4 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+					<div class="h-full bg-red-500 w-2/3"></div>
+				</div>
+			</div>
+			<div class="bg-slate-900 p-6 rounded-[2.5rem] text-white shadow-xl shadow-slate-200">
+				<p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">{ "Ümumi Dövriyyə" }</p>
+				<p class="text-3xl font-black text-emerald-400 mt-2">{ "1,450.20 ₼" }</p>
+				<p class="text-[10px] text-emerald-400/60 mt-2 font-bold">{ "↑ 12% keçən aydan" }</p>
+			</div>
+			<div class="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
+				<p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{ "Alış Tezliyi" }</p>
+				<p class="text-3xl font-black text-slate-800 mt-2">{ "8.5" }</p>
+				<p class="text-[10px] text-slate-400 mt-2 font-bold italic">{ "Ayda orta alış-veriş" }</p>
+			</div>
+			<div class="bg-orange-500 p-6 rounded-[2.5rem] text-white shadow-xl shadow-orange-100">
+				<p class="text-[10px] font-black text-orange-200 uppercase tracking-widest">{ "Ən Çox Alınan" }</p>
+				<p class="text-xl font-black mt-2 truncate">{ "Qırmızı Alma" }</p>
+				<p class="text-[10px] text-orange-100/80 mt-2 font-bold">{ "Ümumi: 45.5 kq" }</p>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+			<div class="bg-white rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden flex flex-col">
+				<div class="p-8 border-b border-slate-50 flex justify-between items-center bg-white/50 backdrop-blur-md sticky top-0 z-10">
+					<h3 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+						<span class="w-10 h-10 bg-blue-500 text-white rounded-2xl flex items-center justify-center text-sm shadow-lg shadow-blue-100 italic">{ "GO" }</span>
+						{ "SATIŞ JURNALI" }
+					</h3>
+				</div>
+				<div class="flex-1 overflow-y-auto max-h-[600px] p-4">
+					if len(c.Purchases) == 0 {
+						<div class="py-20 text-center space-y-4">
+							<span class="text-6xl grayscale">{ "🥥" }</span>
+							<p class="text-slate-400 font-bold uppercase tracking-widest text-xs">{ "Siyahı Boşdur" }</p>
+						</div>
+					} else {
+						<table class="w-full">
+							<thead class="sticky top-0 bg-white text-[10px] font-black text-slate-400 uppercase tracking-widest">
+								<tr>
+									<th class="text-left p-4">{ "Məhsul" }</th>
+									<th class="text-center p-4">{ "Miqdar" }</th>
+									<th class="text-right p-4">{ "Məbləğ" }</th>
+								</tr>
+							</thead>
+							<tbody class="divide-y divide-slate-50">
+								for _, p := range c.Purchases {
+									<tr class="group hover:bg-slate-50 transition-colors">
+										<td class="p-4">
+											<p class="font-black text-slate-800">{ p.ProductName }</p>
+											<p class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{ p.Date.Format("02 Jan 2006, 15:04") }</p>
+										</td>
+										<td class="p-4 text-center">
+											<span class="px-3 py-1 bg-slate-100 rounded-full font-black text-slate-600 text-xs">
+												{ fmt.Sprintf("%.1f kq", p.Quantity) }
+											</span>
+										</td>
+										<td class="p-4 text-right">
+											<p class="font-black text-slate-900">{ fmt.Sprintf("%.2f ₼", p.TotalPrice) }</p>
+											<p class="text-[9px] text-slate-400 font-bold italic">{ fmt.Sprintf("@ %.2f", p.Price) }</p>
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					}
+				</div>
+			</div>
+
+			<div class="bg-white rounded-[3rem] border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden flex flex-col">
+				<div class="p-8 border-b border-slate-50 bg-white/50 backdrop-blur-md sticky top-0 z-10">
+					<h3 class="text-xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+						<span class="w-10 h-10 bg-emerald-500 text-white rounded-2xl flex items-center justify-center text-sm shadow-lg shadow-emerald-100 italic">{ "LOG" }</span>
+						{ "HESAB HƏRƏKƏTLƏRİ" }
+					</h3>
+				</div>
+				<div class="flex-1 p-8 overflow-y-auto max-h-[600px]">
+					if len(c.DebtLogs) == 0 {
+						<p class="text-slate-400 text-sm italic text-center py-4">{ "Hərəkət yoxdur." }</p>
+					} else {
+						<div class="space-y-6 relative before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100">
+							for _, d := range c.DebtLogs {
+								<div class="relative pl-12 group">
+									<div class={ "absolute left-0 top-1 w-10 h-10 rounded-xl border-4 border-white shadow-md z-10 flex items-center justify-center text-xs font-black",
+                                        templ.KV("bg-red-100 text-red-600", d.Type == "increase"),
+                                        templ.KV("bg-emerald-100 text-emerald-600", d.Type == "decrease") }>
+										if d.Type == "increase" {
+											{ "↑" }
+										} else {
+											{ "↓" }
+										}
+									</div>
+									<div class="p-4 bg-slate-50 rounded-2xl border border-transparent hover:border-slate-100 hover:bg-white hover:shadow-lg transition-all">
+										<div class="flex justify-between items-start">
+											<div>
+												<p class="text-sm font-black text-slate-800 uppercase tracking-tight">{ d.Description }</p>
+												<p class="text-[10px] text-slate-400 font-bold">{ d.Date.Format("02.01.2006, 15:04") }</p>
+											</div>
+											<div class={ "text-lg font-black tracking-tighter",
+                                                templ.KV("text-red-500", d.Type == "increase"),
+                                                templ.KV("text-emerald-500", d.Type == "decrease") }>
+												if d.Type == "increase" {
+													{ "+" + fmt.Sprintf("%.2f ₼", d.Amount) }
+												} else {
+													{ "-" + fmt.Sprintf("%.2f ₼", d.Amount) }
+												}
+											</div>
+										</div>
+									</div>
+								</div>
+							}
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+}

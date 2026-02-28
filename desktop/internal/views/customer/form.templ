@@ -1,0 +1,66 @@
+package customer
+
+import (
+    "desktop/internal/viewModels"
+    "fmt"
+)
+
+templ Form(c viewModels.UpdateCustomerVM, isEdit bool) {
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-slate-800">
+                if isEdit {
+                    { "Müştəri Məlumatlarını Yenilə" }
+                } else {
+                    { "Yeni Müştəri Əlavə Et" }
+                }
+            </h2>
+        </div>
+
+        <form id="customer-form" class="space-y-5">
+            if isEdit {
+                <input type="hidden" name="id" value={ fmt.Sprintf("%d", c.ID) } />
+            }
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-1">AD</label>
+                    <input type="text" name="name" value={ c.Name } required
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500" />
+                </div>
+                <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-1">SOYAD</label>
+                    <input type="text" name="surname" value={ c.Surname }
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500" />
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs font-bold text-slate-400 ml-1">TELEFON</label>
+                <input type="text" name="phone" value={ c.Phone }
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500" />
+            </div>
+
+            <div class="space-y-1">
+                <label class="text-xs font-bold text-slate-400 ml-1">ÜNVAN</label>
+                <textarea name="address" rows="3"
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500">{ c.Address }</textarea>
+            </div>
+
+            <div class="flex gap-4 pt-4">
+                <button type="button" onclick="window.loadCustomers()"
+                    class="flex-1 py-4 border border-slate-200 text-slate-500 font-bold rounded-2xl hover:bg-slate-50 transition-all">
+                    Ləğv Et
+                </button>
+                <button type="button" onclick="window.saveCustomer()"
+                    class="flex-[2] bg-orange-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-orange-700 transition-all">
+                    if isEdit {
+                        { "Yenilə" }
+                    } else {
+                        { "Yadda Saxla" }
+                    }
+                </button>
+            </div>
+        </form>
+    </div>
+}

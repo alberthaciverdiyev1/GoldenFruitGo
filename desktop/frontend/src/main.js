@@ -1,4 +1,13 @@
-import {DoLogin, GetLoginPageHTML, ProductForm, GetProductListHTML, SetToken} from '../wailsjs/go/main/App';
+import {
+    DoLogin,
+    GetLoginPageHTML,
+    ProductForm,
+    GetProductListHTML,
+    SetToken,
+    GetCustomerList,
+    GetCustomerForm,
+    GetCustomerDetails
+} from '../wailsjs/go/main/App';
 
 async function init() {
     const savedToken = localStorage.getItem("gf_token");
@@ -63,6 +72,29 @@ window.openProductForm = async (id = 0) => {
     }
 }
 
+window.loadCustomers = async () => {
+    try {
+        document.querySelector('#app').innerHTML = await GetCustomerList();
+    } catch (err) {
+        console.error("Məhsullar yüklənərkən xəta:", err);
+    }
+};
+
+window.openCustomerDetails = async (id) =>{
+    try {
+        document.querySelector('#app').innerHTML = await GetCustomerDetails(id);
+    }catch (err){
+        console.error("Musteri yadaraken xeta:", err);
+    }
+}
+
+window.openCustomerForm = async (id = 0) => {
+    try {
+        document.querySelector('#app').innerHTML = await GetCustomerForm(id);
+    }catch (err){
+        console.error("Musteri yadaraken xeta:", err);
+    }
+}
 
 
 init();

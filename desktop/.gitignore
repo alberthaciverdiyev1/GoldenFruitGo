@@ -1,0 +1,5 @@
+desktop/build/bin
+desktop/node_modules
+desktop/frontend/dist
+desktop/tmp/*
+desktop/build/*

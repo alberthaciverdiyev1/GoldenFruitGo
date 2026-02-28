@@ -6,8 +6,10 @@ import (
 	"desktop/internal/api"
 	"desktop/internal/handlers"
 	"desktop/internal/viewModels"
+	"desktop/internal/views/customer"
 	"desktop/internal/views/product"
 	"fmt"
+	"time"
 )
 
 type App struct {
@@ -89,6 +91,51 @@ func (a *App) ProductForm(id uint64) string {
 		return "Form render xətası: " + err.Error()
 	}
 
+	return buf.String()
+}
+func (a *App) GetCustomerList() string {
+	mockCustomers := []viewModels.CustomerResponseVM{
+		{ID: 1, Name: "Əli", Surname: "Məmmədov", Phone: "055-123-45-67", Debt: 150.50},
+		{ID: 2, Name: "Vəli", Surname: "Əliyev", Phone: "070-987-65-43", Debt: 0.00},
+		{ID: 3, Name: "Vəli", Surname: "Əliyev", Phone: "070-987-65-43", Debt: 0.00},
+		{ID: 4, Name: "Vəli", Surname: "Əliyev", Phone: "070-987-65-43", Debt: 0.00},
+		{ID: 5, Name: "Vəli", Surname: "Əliyev", Phone: "070-987-65-43", Debt: 0.00},
+	}
+	buf := new(bytes.Buffer)
+	customer.List(mockCustomers).Render(context.Background(), buf)
+	return buf.String()
+}
+
+func (a *App) GetCustomerForm(id uint64) string {
+	var c viewModels.UpdateCustomerVM
+	isEdit := id > 0
+	if isEdit {
+		c = viewModels.UpdateCustomerVM{ID: id, Name: "Əli", Surname: "Məmmədov", Phone: "055-123-45-67"}
+	}
+	buf := new(bytes.Buffer)
+	customer.Form(c, isEdit).Render(context.Background(), buf)
+	return buf.String()
+}
+
+func (a *App) GetCustomerDetails(id uint64) string {
+	c := viewModels.CustomerDetailsVM{
+		ID:      id,
+		Name:    "Albert",
+		Surname: "Hüseynov",
+		Phone:   "055-111-22-33",
+		Debt:    54.50,
+		Purchases: []viewModels.CustomerPurchaseVM{
+			{ProductName: "Qırmızı Alma", Quantity: 5.5, Price: 2.00, TotalPrice: 11.00, Date: time.Now()},
+			{ProductName: "Sarı Armud", Quantity: 2.0, Price: 3.50, TotalPrice: 7.00, Date: time.Now()},
+		},
+		DebtLogs: []viewModels.CustomerDebtLogVM{
+			{Amount: 18.00, Description: "Nisyə alış", Type: "increase", Date: time.Now()},
+			{Amount: 10.00, Description: "Ödəniş edildi", Type: "decrease", Date: time.Now()},
+		},
+	}
+
+	buf := new(bytes.Buffer)
+	customer.Details(c).Render(context.Background(), buf)
 	return buf.String()
 }
 

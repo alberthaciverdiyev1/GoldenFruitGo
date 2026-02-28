@@ -6,6 +6,18 @@ export function DoLogin(arg1, arg2) {
   return window['go']['main']['App']['DoLogin'](arg1, arg2);
 }
 
+export function GetCustomerDetails(arg1) {
+  return window['go']['main']['App']['GetCustomerDetails'](arg1);
+}
+
+export function GetCustomerForm(arg1) {
+  return window['go']['main']['App']['GetCustomerForm'](arg1);
+}
+
+export function GetCustomerList() {
+  return window['go']['main']['App']['GetCustomerList']();
+}
+
 export function GetLoginPageHTML(arg1) {
   return window['go']['main']['App']['GetLoginPageHTML'](arg1);
 }
