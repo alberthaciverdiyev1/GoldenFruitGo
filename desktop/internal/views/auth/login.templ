@@ -1,0 +1,42 @@
+package auth
+
+templ LoginPage(errMsg string) {
+    <div class="h-[calc(100vh-120px)] flex items-center justify-center p-4">
+        <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md border border-gray-100">
+            <div class="text-center mb-8">
+                <div class="inline-block p-4 bg-orange-50 rounded-2xl mb-4">
+                    <span class="text-4xl">🍊</span>
+                </div>
+                <h1 class="text-3xl font-extrabold text-slate-800">Xoş Gəldiniz</h1>
+                <p class="text-slate-500 text-sm mt-2">Giriş məlumatlarınızı daxil edin</p>
+            </div>
+
+            <div class="space-y-5">
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase text-slate-400 ml-1">İstifadəçi adı</label>
+                    <input type="text" id="username"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+                        placeholder="username" />
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold uppercase text-slate-400 ml-1">Şifrə</label>
+                    <input type="password" id="password"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+                        placeholder="••••••••" />
+                </div>
+
+                if errMsg != "" {
+                    <div class="p-3 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm">
+                        { errMsg }
+                    </div>
+                }
+
+                <button onclick="window.handleLogin()"
+                    class="w-full bg-orange-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-orange-700 active:scale-[0.97] transition-all">
+                    Daxil Ol
+                </button>
+            </div>
+        </div>
+    </div>
+}
