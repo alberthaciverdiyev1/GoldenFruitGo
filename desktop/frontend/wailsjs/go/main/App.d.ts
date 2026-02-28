@@ -6,4 +6,6 @@ export function DoLogin(arg1:string,arg2:string):Promise<viewModels.LoginResult>
 
 export function GetLoginPageHTML(arg1:string):Promise<string>;
 
+export function GetProductListHTML():Promise<string>;
+
 export function SetToken(arg1:string):Promise<void>;

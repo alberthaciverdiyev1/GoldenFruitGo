@@ -1,22 +1,17 @@
-import { DoLogin, GetLoginPageHTML, SetToken } from '../wailsjs/go/main/App';
+import {DoLogin, GetLoginPageHTML, GetProductListHTML, SetToken} from '../wailsjs/go/main/App';
 
 async function init() {
-    // 1. Yaddaşda token varmı yoxla?
     const savedToken = localStorage.getItem("gf_token");
     const savedUser = localStorage.getItem("gf_user");
 
     if (savedToken && savedUser) {
         console.log("Token tapıldı, avtomatik giriş edilir...");
 
-        // Go tərəfindəki API Client-ə bu tokeni tanıtmalıyıq ki, sorğu ata bilsin
         await SetToken(savedToken);
 
-        // Birbaşa Dashboard-u yükləyirik
         loadDashboard(savedUser);
     } else {
-        // Token yoxdursa, Login səhifəsini göstər
-        const html = await GetLoginPageHTML("");
-        document.querySelector('#app').innerHTML = html;
+        document.querySelector('#app').innerHTML = await GetLoginPageHTML("");
     }
 }
 
@@ -27,14 +22,12 @@ window.handleLogin = async () => {
     const res = await DoLogin(u, p);
 
     if (res.success) {
-        // 2. Tokeni və İstifadəçi adını yaddaşa yazırıq
         localStorage.setItem("gf_token", res.token);
         localStorage.setItem("gf_user", res.user);
 
         loadDashboard(res.user);
     } else {
-        const html = await GetLoginPageHTML(res.message);
-        document.querySelector('#app').innerHTML = html;
+        document.querySelector('#app').innerHTML = await GetLoginPageHTML(res.message);
     }
 };
 
@@ -48,11 +41,18 @@ function loadDashboard(userName) {
     `;
 }
 
-// Çıxış funksiyası
 window.logout = () => {
     localStorage.removeItem("gf_token");
     localStorage.removeItem("gf_user");
-    location.reload(); // Proqramı yenilə ki, init() işə düşsün və login açılsın
+    location.reload();
+};
+
+window.loadProducts = async () => {
+    try {
+        document.querySelector('#app').innerHTML = await GetProductListHTML();
+    } catch (err) {
+        console.error("Məhsullar yüklənərkən xəta:", err);
+    }
 };
 
 init();

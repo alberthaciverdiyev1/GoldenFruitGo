@@ -10,6 +10,10 @@ export function GetLoginPageHTML(arg1) {
   return window['go']['main']['App']['GetLoginPageHTML'](arg1);
 }
 
+export function GetProductListHTML() {
+  return window['go']['main']['App']['GetProductListHTML']();
+}
+
 export function SetToken(arg1) {
   return window['go']['main']['App']['SetToken'](arg1);
 }

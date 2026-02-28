@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"desktop/internal/api"
 	"desktop/internal/handlers"
 	"desktop/internal/viewModels"
+	"desktop/internal/views/product"
 	"fmt"
 )
 
@@ -43,6 +45,24 @@ func (a *App) DoLogin(user, pass string) viewModels.LoginResult {
 		Token:   res.Token,
 	}
 }
+
+func (a *App) GetProductListHTML() string {
+	// 1. API-dan məhsulları gətiririk (Sizin mövcud API Client ilə)
+	// products, err := a.Auth.API.GetProducts()
+
+	mockData := []viewModels.ProductListVM{
+		{Name: "Qırmızı Alma", Quantity: 50, Weight: 120.5, BuyingPrice: 1.20, SellingPrice: 2.50, Stock: 50},
+		{Name: "Sarı Armud", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
+		{Name: "Qara Tut", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
+		{Name: "Mavi Qizilgul", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
+		{Name: "Qirmizi Pomidor", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
+	}
+
+	buf := new(bytes.Buffer)
+	product.List(mockData).Render(context.Background(), buf)
+	return buf.String()
+}
+
 func (a *App) SetToken(token string) {
 	a.Auth.API.Token = token
 	fmt.Println("Köhnə token bərpa edildi.")
