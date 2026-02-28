@@ -1,6 +1,7 @@
 package viewModels
 
 type ProductListVM struct {
+	Id           uint64
 	Name         string
 	Quantity     int
 	BuyingPrice  float64

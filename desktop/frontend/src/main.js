@@ -1,4 +1,4 @@
-import {DoLogin, GetLoginPageHTML, GetProductListHTML, SetToken} from '../wailsjs/go/main/App';
+import {DoLogin, GetLoginPageHTML, ProductForm, GetProductListHTML, SetToken} from '../wailsjs/go/main/App';
 
 async function init() {
     const savedToken = localStorage.getItem("gf_token");
@@ -54,5 +54,15 @@ window.loadProducts = async () => {
         console.error("Məhsullar yüklənərkən xəta:", err);
     }
 };
+
+window.openProductForm = async (id = 0) => {
+    try {
+        document.querySelector('#app').innerHTML = await ProductForm(id);
+    } catch (err) {
+        console.error("Məhsul yaradarken xəta:", err);
+    }
+}
+
+
 
 init();

@@ -51,15 +51,44 @@ func (a *App) GetProductListHTML() string {
 	// products, err := a.Auth.API.GetProducts()
 
 	mockData := []viewModels.ProductListVM{
-		{Name: "Qırmızı Alma", Quantity: 50, Weight: 120.5, BuyingPrice: 1.20, SellingPrice: 2.50, Stock: 50},
-		{Name: "Sarı Armud", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
-		{Name: "Qara Tut", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
-		{Name: "Mavi Qizilgul", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
-		{Name: "Qirmizi Pomidor", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
+		{Id: 1, Name: "Qırmızı Alma", Quantity: 50, Weight: 120.5, BuyingPrice: 1.20, SellingPrice: 2.50, Stock: 50},
+		{Id: 2, Name: "Sarı Armud", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
+		{Id: 3, Name: "Qara Tut", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
+		{Id: 4, Name: "Mavi Qizilgul", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
+		{Id: 5, Name: "Qirmizi Pomidor", Quantity: 12, Weight: 30.0, BuyingPrice: 2.10, SellingPrice: 3.80, Stock: 5},
 	}
 
 	buf := new(bytes.Buffer)
 	product.List(mockData).Render(context.Background(), buf)
+	return buf.String()
+}
+
+func (a *App) ProductForm(id uint64) string {
+	var p viewModels.ProductUpdateVM
+	isEdit := id > 0
+
+	if isEdit {
+		// Normalda burada API-dan məhsulu ID-yə görə çəkməlisən
+		// Məsələn: p, _ = a.Auth.API.GetProductByID(id)
+
+		p = viewModels.ProductUpdateVM{
+			Id:           id,
+			Name:         "Sarı Armud",
+			BuyingPrice:  2.10,
+			SellingPrice: 3.80,
+			Weight:       30.0,
+			Stock:        5,
+		}
+	} else {
+		p = viewModels.ProductUpdateVM{}
+	}
+
+	buf := new(bytes.Buffer)
+	err := product.Form(p, isEdit).Render(context.Background(), buf)
+	if err != nil {
+		return "Form render xətası: " + err.Error()
+	}
+
 	return buf.String()
 }
 

@@ -14,6 +14,10 @@ export function GetProductListHTML() {
   return window['go']['main']['App']['GetProductListHTML']();
 }
 
+export function ProductForm(arg1) {
+  return window['go']['main']['App']['ProductForm'](arg1);
+}
+
 export function SetToken(arg1) {
   return window['go']['main']['App']['SetToken'](arg1);
 }
