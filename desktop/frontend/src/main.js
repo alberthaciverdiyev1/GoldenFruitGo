@@ -97,4 +97,20 @@ window.openCustomerForm = async (id = 0) => {
 }
 
 
+window.switchTab = function(tabName) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+    const panel = document.getElementById('panel-' + tabName);
+    if (panel) panel.classList.remove('hidden');
+
+    document.querySelectorAll('[id^="tab-"]').forEach(b => {
+        b.classList.remove('bg-white', 'text-slate-900', 'shadow-sm');
+        b.classList.add('text-slate-400');
+    });
+    const btn = document.getElementById('tab-' + tabName);
+    if (btn) {
+        btn.classList.add('bg-white', 'text-slate-900', 'shadow-sm');
+        btn.classList.remove('text-slate-400');
+    }
+}
+
 init();

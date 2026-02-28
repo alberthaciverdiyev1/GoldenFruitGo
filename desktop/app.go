@@ -121,10 +121,15 @@ func (a *App) GetCustomerDetails(id uint64) string {
 	c := viewModels.CustomerDetailsVM{
 		ID:      id,
 		Name:    "Albert",
-		Surname: "Hüseynov",
+		Surname: "Haciverdiyev",
 		Phone:   "055-111-22-33",
+		Address: "Baki",
 		Debt:    54.50,
 		Purchases: []viewModels.CustomerPurchaseVM{
+			{ProductName: "Qırmızı Alma", Quantity: 5.5, Price: 2.00, TotalPrice: 11.00, Date: time.Now()},
+			{ProductName: "Sarı Armud", Quantity: 2.0, Price: 3.50, TotalPrice: 7.00, Date: time.Now()},
+		},
+		Sales: []viewModels.CustomerSaleVM{
 			{ProductName: "Qırmızı Alma", Quantity: 5.5, Price: 2.00, TotalPrice: 11.00, Date: time.Now()},
 			{ProductName: "Sarı Armud", Quantity: 2.0, Price: 3.50, TotalPrice: 7.00, Date: time.Now()},
 		},
