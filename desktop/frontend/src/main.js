@@ -1,12 +1,14 @@
 import {
     DoLogin,
-    GetLoginPageHTML,
-    ProductForm,
-    GetProductListHTML,
-    SetToken,
-    GetCustomerList,
+    GetCustomerDetails,
     GetCustomerForm,
-    GetCustomerDetails
+    GetCustomerList,
+    GetLoginPageHTML,
+    GetProductListHTML,
+    ProductForm,
+    GetSaleForm,
+    GetSaleList,
+    SetToken
 } from '../wailsjs/go/main/App';
 
 async function init() {
@@ -80,10 +82,10 @@ window.loadCustomers = async () => {
     }
 };
 
-window.openCustomerDetails = async (id) =>{
+window.openCustomerDetails = async (id) => {
     try {
         document.querySelector('#app').innerHTML = await GetCustomerDetails(id);
-    }catch (err){
+    } catch (err) {
         console.error("Musteri yadaraken xeta:", err);
     }
 }
@@ -91,13 +93,31 @@ window.openCustomerDetails = async (id) =>{
 window.openCustomerForm = async (id = 0) => {
     try {
         document.querySelector('#app').innerHTML = await GetCustomerForm(id);
-    }catch (err){
+    } catch (err) {
         console.error("Musteri yadaraken xeta:", err);
     }
 }
 
 
-window.switchTab = function(tabName) {
+window.openSaleForm = async (id = 0) => {
+    try {
+        document.querySelector('#app').innerHTML = await GetSaleForm(id);
+    } catch (err) {
+        console.error("Satis modalinda xeta:", err);
+    }
+}
+
+window.loadSales = async () => {
+    try {
+        document.querySelector('#app').innerHTML = await GetSaleList();
+    } catch (err) {
+        console.error("Satis listi yuklenerken xeta:", err);
+    }
+}
+
+
+
+window.switchTab = function (tabName) {
     document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
     const panel = document.getElementById('panel-' + tabName);
     if (panel) panel.classList.remove('hidden');

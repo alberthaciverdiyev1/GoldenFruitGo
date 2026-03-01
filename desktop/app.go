@@ -8,6 +8,7 @@ import (
 	"desktop/internal/viewModels"
 	"desktop/internal/views/customer"
 	"desktop/internal/views/product"
+	sales "desktop/internal/views/sale"
 	"fmt"
 	"time"
 )
@@ -141,6 +142,85 @@ func (a *App) GetCustomerDetails(id uint64) string {
 
 	buf := new(bytes.Buffer)
 	customer.Details(c).Render(context.Background(), buf)
+	return buf.String()
+}
+
+// --- Sales ---
+
+func (a *App) GetSaleList() string {
+	// Realistik Satış Tarixçəsi Dump Datası
+	mockSales := []viewModels.SaleVM{
+		{
+			Id:          101,
+			Customer:    viewModels.CustomerResponseVM{Name: "Əli", Surname: "Məmmədov"},
+			CrateDate:   time.Now().Add(-2 * time.Hour),
+			Quantity:    15,
+			Weight:      2.5,
+			TotalWeight: 40.0, // Brutto
+			NetWeight:   37.5, // Netto
+			TotalPrice:  93.75,
+		},
+		{
+			Id:          102,
+			Customer:    viewModels.CustomerResponseVM{Name: "Albert", Surname: "Haciverdiyev"},
+			CrateDate:   time.Now().Add(-24 * time.Hour),
+			Quantity:    10,
+			Weight:      1.8,
+			TotalWeight: 20.0,
+			NetWeight:   18.0,
+			TotalPrice:  54.00,
+		},
+		{
+			Id:          103,
+			Customer:    viewModels.CustomerResponseVM{Name: "Nizami", Surname: "Gəncəvi"},
+			CrateDate:   time.Now().Add(-48 * time.Hour),
+			Quantity:    50,
+			Weight:      0.5,
+			TotalWeight: 28.0,
+			NetWeight:   25.0,
+			TotalPrice:  125.00,
+		},
+	}
+
+	buf := new(bytes.Buffer)
+	// Qeyd: views/sales paketindəki List funksiyasını çağırırıq
+	sales.List(mockSales).Render(context.Background(), buf)
+	// (Aşağıda birbaşa render üçün istifadə edə bilərsən)
+	return buf.String()
+}
+
+func (a *App) GetSaleForm(id uint64) string {
+	// Müştəri siyahısı (Select box üçün)
+	mockCustomers := []viewModels.CustomerResponseVM{
+		{ID: 1, Name: "Əli", Surname: "Məmmədov"},
+		{ID: 3, Name: "Albert", Surname: "Haciverdiyev"},
+		{ID: 4, Name: "Nizami", Surname: "Gəncəvi"},
+	}
+
+	var s viewModels.SaleRequestVM
+	isEdit := id > 0
+
+	if isEdit {
+		// Redaktə rejimi üçün mövcud satış datası
+		s = viewModels.SaleRequestVM{
+			Id:          id,
+			CustomerID:  3, // Albert
+			Quantity:    12,
+			Weight:      2.0,
+			TotalWeight: 26.0,
+			NetWeight:   24.0,
+			TotalPrice:  48.00,
+		}
+	} else {
+		// Yeni satış üçün boş model
+		s = viewModels.SaleRequestVM{
+			Quantity: 1,
+			Weight:   0.0,
+		}
+	}
+
+	buf := new(bytes.Buffer)
+	sales.Form(mockCustomers, s, isEdit).Render(context.Background(), buf)
 	return buf.String()
 }
 

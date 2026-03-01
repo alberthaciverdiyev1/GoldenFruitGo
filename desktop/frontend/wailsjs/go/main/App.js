@@ -26,6 +26,14 @@ export function GetProductListHTML() {
   return window['go']['main']['App']['GetProductListHTML']();
 }
 
+export function GetSaleForm(arg1) {
+  return window['go']['main']['App']['GetSaleForm'](arg1);
+}
+
+export function GetSaleList() {
+  return window['go']['main']['App']['GetSaleList']();
+}
+
 export function ProductForm(arg1) {
   return window['go']['main']['App']['ProductForm'](arg1);
 }
