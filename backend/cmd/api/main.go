@@ -1,4 +1,4 @@
-package main
+package api_server
 
 import (
 	"log"
@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
+func Start() {
 	db := database.ConnectToDatabase()
 
 	jwtService := services.NewJWTService()

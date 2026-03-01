@@ -18,12 +18,24 @@ export function GetCustomerList() {
   return window['go']['main']['App']['GetCustomerList']();
 }
 
+export function GetDashboard() {
+  return window['go']['main']['App']['GetDashboard']();
+}
+
 export function GetLoginPageHTML(arg1) {
   return window['go']['main']['App']['GetLoginPageHTML'](arg1);
 }
 
 export function GetProductListHTML() {
   return window['go']['main']['App']['GetProductListHTML']();
+}
+
+export function GetPurchaseForm(arg1) {
+  return window['go']['main']['App']['GetPurchaseForm'](arg1);
+}
+
+export function GetPurchaseList() {
+  return window['go']['main']['App']['GetPurchaseList']();
 }
 
 export function GetSaleForm(arg1) {

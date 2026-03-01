@@ -1,0 +1,84 @@
+package purchases
+
+import (
+    "desktop/internal/viewModels"
+    "fmt"
+)
+
+templ List(purchases []viewModels.PurchaseVM) {
+    <div class="space-y-6 animate-in fade-in duration-500">
+       <div class="flex justify-between items-center">
+          <div>
+             <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Alış Tarixçəsi</h2>
+             <p class="text-slate-500 text-sm">Tədarükçülərdən daxil olan mallar</p>
+          </div>
+          <button onclick="window.openPurchaseForm()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-emerald-100 transition-all flex items-center gap-2 active:scale-95">
+             <span class="text-xl">+</span> Yeni Alış
+          </button>
+       </div>
+
+       <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm">
+          <table class="w-full text-left border-collapse">
+             <thead>
+                <tr class="bg-slate-50 border-b border-slate-200">
+                   <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Tədarükçü</th>
+                   <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Tarix</th>
+                   <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-center">Miqdar / Çəki</th>
+                   <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-center">Xalis Çəki</th>
+                   <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">Toplam Ödəniş</th>
+                   <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">Əməliyyat</th>
+                </tr>
+             </thead>
+             <tbody class="divide-y divide-slate-100">
+                if len(purchases) == 0 {
+                   <tr>
+                      <td colspan="6" class="px-6 py-12 text-center text-slate-400 italic">
+                         Hələ ki, heç bir alış qeydə alınmayıb.
+                      </td>
+                   </tr>
+                } else {
+                   for _, p := range purchases {
+                      <tr class="hover:bg-slate-50/80 transition-colors group">
+                         <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                               <div class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-500 group-hover:bg-emerald-100 group-hover:text-emerald-600 transition-colors">
+                                  <span class="text-xs font-bold">🚚</span>
+                               </div>
+                               <span class="font-semibold text-slate-700">{ p.Customer.Name } { p.Customer.Surname }</span>
+                            </div>
+                         </td>
+                         <td class="px-6 py-4 text-slate-500 text-sm">
+                            { p.CrateDate.Format("02.01.2006") }
+                            <span class="block text-[10px] text-slate-400">{ p.CrateDate.Format("15:04") }</span>
+                         </td>
+                         <td class="px-6 py-4 text-center text-slate-600 font-medium">
+                            { fmt.Sprintf("%d ədəd", p.Quantity) }
+                            <p class="text-[10px] text-slate-400 leading-none mt-1">Brüt: { fmt.Sprintf("%.2f", p.TotalWeight) } kq</p>
+                         </td>
+                         <td class="px-6 py-4 text-center">
+                            <span class="px-2.5 py-1 bg-amber-50 text-amber-600 rounded-full text-[11px] font-bold border border-amber-100">
+                               { fmt.Sprintf("%.2f kq", p.NetWeight) }
+                            </span>
+                         </td>
+                         <td class="px-6 py-4 text-emerald-600 font-bold text-lg">
+                            { fmt.Sprintf("%.2f ₼", p.TotalPrice) }
+                         </td>
+                         <td class="px-6 py-4 text-right">
+                            <button
+                               { templ.Attributes{ "onclick": fmt.Sprintf("window.openPurchaseForm(%d)", p.Id) }... }
+                               class="text-slate-400 hover:text-emerald-600 transition-colors p-2 rounded-lg hover:bg-white shadow-sm hover:shadow border border-transparent hover:border-slate-100"
+                            >
+                               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                               </svg>
+                            </button>
+                         </td>
+                      </tr>
+                   }
+                }
+             </tbody>
+          </table>
+       </div>
+    </div>
+}

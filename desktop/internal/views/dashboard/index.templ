@@ -1,0 +1,113 @@
+package dashboard
+
+import (
+    "desktop/internal/viewModels"
+    "fmt"
+)
+
+templ List(data viewModels.DashboardVM) {
+    <div class="space-y-8 animate-in fade-in duration-500">
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">İdarəetmə Paneli</h2>
+                <p class="text-slate-500 text-sm">Sistemin ümumi vəziyyəti və son hərəkətlər</p>
+            </div>
+            <div class="text-right">
+                <p class="text-xs font-bold text-slate-400 uppercase">Yenilənmə vaxtı</p>
+                <p class="text-sm font-semibold text-slate-700">Bu gün, 18:35</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            @statCard("Bugünkü Satış", fmt.Sprintf("%.2f ₼", data.TotalSalesToday), "↗️", "orange")
+            @statCard("Bugünkü Alış", fmt.Sprintf("%.2f ₼", data.TotalPurchasesToday), "↘️", "emerald")
+            @statCard("Ümumi Stok", fmt.Sprintf("%.2f kq", data.TotalStockWeight), "📦", "blue")
+            @statCard("Aktiv Müştərilər", fmt.Sprintf("%d nəfər", data.ActiveCustomerCount), "👥", "purple")
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+                <div class="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
+                    <h3 class="font-bold text-slate-800">Son Əməliyyatlar</h3>
+                    <button class="text-orange-600 text-xs font-bold hover:underline tracking-tight">Bütün tarixçə</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b border-slate-100">
+                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase">Tip</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase">Tərəf</th>
+                                <th class="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase text-right">Məbləğ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            for _, t := range data.RecentTransactions {
+                                <tr class="hover:bg-slate-50/50 transition-colors group">
+                                    <td class="px-6 py-4">
+                                        if t.Type == "sale" {
+                                            <span class="px-2 py-1 bg-orange-50 text-orange-600 rounded-lg text-[10px] font-bold uppercase border border-orange-100">Satış</span>
+                                        } else {
+                                            <span class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded-lg text-[10px] font-bold uppercase border border-emerald-100">Alış</span>
+                                        }
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="text-sm font-semibold text-slate-700">{ t.Party }</div>
+                                        <div class="text-[10px] text-slate-400 font-medium">{ t.Time }</div>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-bold text-slate-900 text-right">
+                                        { fmt.Sprintf("%.2f ₼", t.Amount) }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-3xl shadow-sm p-6 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-bold text-slate-800">Azalan Stoklar</h3>
+                    <span class="px-2 py-0.5 bg-red-50 text-red-600 rounded-md text-[10px] font-bold uppercase">Diqqət</span>
+                </div>
+
+                <div class="space-y-3">
+                    for _, p := range data.LowStockProducts {
+                        <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-red-200 transition-colors cursor-pointer" onclick="window.openProductForm()">
+                            <div>
+                                <p class="text-sm font-bold text-slate-700 group-hover:text-red-700 transition-colors">{ p.Name }</p>
+                                <p class="text-[10px] text-slate-500 font-medium">Anbarda: { fmt.Sprintf("%.1f", p.Weight) } kq</p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+                                <span class="text-xs">⚠️</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <button onclick="window.loadProductList()" class="w-full mt-2 py-3.5 bg-slate-900 text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg shadow-slate-200 active:scale-95">
+                    Anbarı İdarə Et
+                </button>
+            </div>
+        </div>
+    </div>
+}
+
+templ statCard(title string, value string, icon string, color string) {
+    <div class={ "bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all group border-b-4",
+        templ.KV("border-b-orange-500", color == "orange"),
+        templ.KV("border-b-emerald-500", color == "emerald"),
+        templ.KV("border-b-blue-500", color == "blue"),
+        templ.KV("border-b-purple-500", color == "purple") }>
+        <div class="flex items-center justify-between mb-4">
+            <div class={ "w-10 h-10 rounded-xl flex items-center justify-center text-lg",
+                templ.KV("bg-orange-50 text-orange-600", color == "orange"),
+                templ.KV("bg-emerald-50 text-emerald-600", color == "emerald"),
+                templ.KV("bg-blue-50 text-blue-600", color == "blue"),
+                templ.KV("bg-purple-50 text-purple-600", color == "purple") }>
+                { icon }
+            </div>
+        </div>
+        <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">{ title }</p>
+        <h3 class="text-2xl font-black text-slate-800 mt-1 tracking-tight">{ value }</h3>
+    </div>
+}

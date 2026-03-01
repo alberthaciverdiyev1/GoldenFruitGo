@@ -7,8 +7,9 @@ import {
     GetProductListHTML,
     ProductForm,
     GetSaleForm,
+    GetDashboard,
     GetSaleList,
-    SetToken
+    SetToken, GetPurchaseForm, GetPurchaseList
 } from '../wailsjs/go/main/App';
 
 async function init() {
@@ -36,21 +37,13 @@ window.handleLogin = async () => {
         localStorage.setItem("gf_token", res.token);
         localStorage.setItem("gf_user", res.user);
 
-        loadDashboard(res.user);
+        await window.loadDashboard()
     } else {
         document.querySelector('#app').innerHTML = await GetLoginPageHTML(res.message);
     }
 };
 
-function loadDashboard(userName) {
-    document.querySelector('#app').innerHTML = `
-        <div class="p-10 text-center animate-fade-in">
-            <h1 class="text-2xl font-bold text-orange-600 tracking-tight">Xoş gəldin, ${userName}!</h1>
-            <p class="text-slate-500 mt-2">Golden Fruit Dashboard hazırlanır...</p>
-            <button onclick="logout()" class="mt-6 text-xs text-red-500 border border-red-200 px-3 py-1 rounded-lg hover:bg-red-50">Çıxış et</button>
-        </div>
-    `;
-}
+
 
 window.logout = () => {
     localStorage.removeItem("gf_token");
@@ -114,6 +107,33 @@ window.loadSales = async () => {
         console.error("Satis listi yuklenerken xeta:", err);
     }
 }
+
+
+window.openPurchaseForm = async (id = 0) => {
+    try {
+        document.querySelector('#app').innerHTML = await GetPurchaseForm(id);
+    } catch (err) {
+        console.error("Satis modalinda xeta:", err);
+    }
+}
+
+window.loadPurchases = async () => {
+    try {
+        document.querySelector('#app').innerHTML = await GetPurchaseList();
+    } catch (err) {
+        console.error("Satis listi yuklenerken xeta:", err);
+    }
+}
+
+
+window.loadDashboard = async () => {
+    try {
+        document.querySelector('#app').innerHTML = await GetDashboard();
+    } catch (err) {
+        console.error("Dashboard yuklenerken xeta:", err);
+    }
+}
+
 
 
 

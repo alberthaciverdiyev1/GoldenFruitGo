@@ -7,7 +7,9 @@ import (
 	"desktop/internal/handlers"
 	"desktop/internal/viewModels"
 	"desktop/internal/views/customer"
+	"desktop/internal/views/dashboard"
 	"desktop/internal/views/product"
+	purchases "desktop/internal/views/purchase"
 	sales "desktop/internal/views/sale"
 	"fmt"
 	"time"
@@ -224,7 +226,107 @@ func (a *App) GetSaleForm(id uint64) string {
 	return buf.String()
 }
 
+func (a *App) GetPurchaseList() string {
+	// Realistik Alış Tarixçəsi Dump Datası
+	mockPurchases := []viewModels.PurchaseVM{
+		{
+			Id:          201,
+			Customer:    viewModels.CustomerResponseVM{Name: "Tədarükçü", Surname: "Xəzər MMC"},
+			CrateDate:   time.Now().Add(-5 * time.Hour),
+			Quantity:    100,
+			Weight:      0.8,
+			TotalWeight: 85.0, // Brutto
+			NetWeight:   80.0, // Netto
+			TotalPrice:  320.00,
+		},
+		{
+			Id:          202,
+			Customer:    viewModels.CustomerResponseVM{Name: "Vüqar", Surname: "Qasımov"},
+			CrateDate:   time.Now().Add(-48 * time.Hour),
+			Quantity:    50,
+			Weight:      1.2,
+			TotalWeight: 65.0,
+			NetWeight:   60.0,
+			TotalPrice:  180.00,
+		},
+		{
+			Id:          203,
+			Customer:    viewModels.CustomerResponseVM{Name: "Böyük", Surname: "Anbar Şirkəti"},
+			CrateDate:   time.Now().Add(-120 * time.Hour),
+			Quantity:    200,
+			Weight:      0.5,
+			TotalWeight: 110.0,
+			NetWeight:   100.0,
+			TotalPrice:  450.00,
+		},
+	}
+
+	buf := new(bytes.Buffer)
+	// Qeyd: views/purchases paketindəki List funksiyasını çağırırıq
+	purchases.List(mockPurchases).Render(context.Background(), buf)
+	return buf.String()
+}
+
+func (a *App) GetPurchaseForm(id uint64) string {
+	// Tədarükçü/Müştəri siyahısı (Select box üçün)
+	mockSuppliers := []viewModels.CustomerResponseVM{
+		{ID: 10, Name: "Tədarükçü", Surname: "Xəzər MMC"},
+		{ID: 11, Name: "Vüqar", Surname: "Qasımov"},
+		{ID: 12, Name: "Böyük", Surname: "Anbar Şirkəti"},
+	}
+
+	var p viewModels.PurchaseRequestVM
+	isEdit := id > 0
+
+	if isEdit {
+		// Redaktə rejimi üçün mövcud alış datası (Dump)
+		p = viewModels.PurchaseRequestVM{
+			Id:          id,
+			CustomerID:  11, // Vüqar Qasımov
+			Quantity:    50,
+			Weight:      1.2,
+			TotalWeight: 65.0,
+			NetWeight:   60.0,
+			TotalPrice:  180.00,
+		}
+	} else {
+		// Yeni alış üçün standart boş model
+		p = viewModels.PurchaseRequestVM{
+			Quantity: 0,
+			Weight:   0.0,
+		}
+	}
+
+	buf := new(bytes.Buffer)
+	// views/purchases paketindəki Form funksiyasını çağırırıq
+	purchases.Form(mockSuppliers, p, isEdit).Render(context.Background(), buf)
+	return buf.String()
+}
+
 func (a *App) SetToken(token string) {
 	a.Auth.API.Token = token
 	fmt.Println("Köhnə token bərpa edildi.")
+}
+
+func (a *App) GetDashboard() string {
+	// Digər metodlardakı mock dataları birləşdirək
+	data := viewModels.DashboardVM{
+		TotalSalesToday:     1250.40,
+		TotalPurchasesToday: 840.20,
+		TotalStockWeight:    4280.50,
+		ActiveCustomerCount: 142,
+		RecentTransactions: []viewModels.TransactionVM{
+			{Type: "sale", Party: "Əli Məmmədov", Amount: 45.50, Time: "14:20"},
+			{Type: "purchase", Party: "Xəzər MMC", Amount: 120.00, Time: "12:15"},
+			{Type: "sale", Party: "Albert Haciverdiyev", Amount: 12.20, Time: "10:05"},
+		},
+		LowStockProducts: []viewModels.ProductListVM{
+			{Name: "Sarı Armud", Weight: 5.0},
+			{Name: "Qırmızı Alma", Weight: 8.5},
+		},
+	}
+
+	buf := new(bytes.Buffer)
+	dashboard.List(data).Render(context.Background(), buf)
+	return buf.String()
 }

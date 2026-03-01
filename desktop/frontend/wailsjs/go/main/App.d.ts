@@ -10,9 +10,15 @@ export function GetCustomerForm(arg1:number):Promise<string>;
 
 export function GetCustomerList():Promise<string>;
 
+export function GetDashboard():Promise<string>;
+
 export function GetLoginPageHTML(arg1:string):Promise<string>;
 
 export function GetProductListHTML():Promise<string>;
+
+export function GetPurchaseForm(arg1:number):Promise<string>;
+
+export function GetPurchaseList():Promise<string>;
 
 export function GetSaleForm(arg1:number):Promise<string>;
 
