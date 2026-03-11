@@ -14,7 +14,7 @@ func ConnectToDatabase() *gorm.DB {
 		log.Fatalf("Cannot Connect To Database: %v", err)
 	}
 
-	err = db.AutoMigrate(&entity.Customer{}, &entity.User{})
+	err = db.AutoMigrate(&entity.Customer{}, &entity.User{}, &entity.Payment{})
 	if err != nil {
 		log.Fatalf("Migration Error: %v", err)
 	}

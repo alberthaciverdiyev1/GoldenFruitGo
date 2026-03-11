@@ -87,26 +87,48 @@ window.openCustomerDetails = async (id) => {
 
 window.saveCustomer = async () => {
     try {
+        const errorDiv = document.getElementById("error-msg");
         const form = document.getElementById("customer-form");
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
 
-        const id = data.id ? parseInt(data.id) : 0;
+        data.ID = data.id ? parseInt(data.id) : 0;
+        delete data.id;
+
+        if (!data.name || data.name.trim().length < 3) {
+            errorDiv.innerText = "Ad 2 hərfdən kiçik ola bilməz";
+            return;
+        }
+        if (!data.surname || data.surname.trim().length < 3) {
+            errorDiv.innerText = "Soyad 2 hərfdən kiçik ola bilməz";
+            return;
+        }
+        if (!data.phone || data.phone.trim().length < 3) {
+            errorDiv.innerText = "Telefon 2 hərfdən kiçik ola bilməz";
+            return;
+        }
+        if (!data.address || data.address.trim().length < 3) {
+            errorDiv.innerText = "Ünvan 2 hərfdən kiçik ola bilməz";
+            return;
+        }
+
+        errorDiv.innerText = "";
 
         let result;
-        if (id > 0) {
+        if (data.ID > 0) {
             result = await UpdateCustomer(data);
         } else {
             result = await CreateCustomer(data);
         }
 
-        if (result && result.includes("xəta")) {
-            alert(result);
+        if (result && result.toLowerCase().includes("xəta")) {
+            errorDiv.innerText = result;
         } else {
             window.loadCustomers();
         }
     } catch (err) {
         console.error("Müştəri yadda saxlanılarkən sistem xətası:", err);
+        document.getElementById("error-msg").innerText = "Sistem xətası baş verdi.";
     }
 }
 
