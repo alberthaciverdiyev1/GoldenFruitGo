@@ -32,7 +32,7 @@ func (s *CustomerService) GetAll(ctx context.Context, search string) ([]entity.C
 
 func (s *CustomerService) GetByID(ctx context.Context, id uint64) (*entity.Customer, error) {
 	var customer entity.Customer
-	err := s.db.WithContext(ctx).First(&customer, id).Error
+	err := s.db.WithContext(ctx).Preload("Payments").First(&customer, id).Error
 	return &customer, err
 }
 
@@ -40,10 +40,8 @@ func (s *CustomerService) Create(ctx context.Context, req dto.CreateCustomerRequ
 	customer := entity.Customer{
 		Name:    req.Name,
 		Surname: req.Surname,
-		Email:   req.Email,
 		Phone:   req.Phone,
 		Address: req.Address,
-		Image:   req.Image,
 	}
 	return s.db.WithContext(ctx).Create(&customer).Error
 }
@@ -52,10 +50,8 @@ func (s *CustomerService) Update(ctx context.Context, id uint64, req dto.UpdateC
 	updates := map[string]interface{}{
 		"name":    req.Name,
 		"surname": req.Surname,
-		"email":   req.Email,
 		"phone":   req.Phone,
 		"address": req.Address,
-		"image":   req.Image,
 	}
 	return s.db.WithContext(ctx).Model(&entity.Customer{}).Where("id = ?", id).Updates(updates).Error
 }

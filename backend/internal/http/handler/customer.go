@@ -17,21 +17,18 @@ func NewCustomerHandler(service *services.CustomerService) *CustomerHandler {
 	return &CustomerHandler{service: service}
 }
 
-// List: GET /api/v1/customers?q=search_term
 func (h *CustomerHandler) List(c *gin.Context) {
 	searchQuery := c.Query("q")
 
 	customers, err := h.service.GetAll(c.Request.Context(), searchQuery)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Müşteriler listelenemedi"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Customer List Error"})
 		return
 	}
 
-	// Liste boş olsa bile 200 OK ve boş array dönmek best practice'dir.
 	c.JSON(http.StatusOK, customers)
 }
 
-// GetByID: GET /api/v1/customers/:id
 func (h *CustomerHandler) GetByID(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
@@ -41,7 +38,6 @@ func (h *CustomerHandler) GetByID(c *gin.Context) {
 
 	customer, err := h.service.GetByID(c.Request.Context(), id)
 	if err != nil {
-		// Kayıt bulunamadığında 404 dönüyoruz
 		c.JSON(http.StatusNotFound, gin.H{"error": "Müşteri bulunamadı"})
 		return
 	}
@@ -63,7 +59,7 @@ func (h *CustomerHandler) Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Müşteri başarıyla oluşturuldu"})
+	c.JSON(http.StatusCreated, gin.H{"message": "Müşteri Uğurla Yaradıldı"})
 }
 
 // Update: PUT /api/v1/customers/:id

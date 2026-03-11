@@ -25,35 +25,35 @@ templ Form(c viewModels.UpdateCustomerVM, isEdit bool) {
             <div class="grid grid-cols-2 gap-4">
                 <div class="space-y-1">
                     <label class="text-xs font-bold text-slate-400 ml-1">AD</label>
-                    <input type="text" name="name" value={ c.Name } required
+                    <input type="text" name="name" value={ c.Name } required minlength="2" maxlength="50"
                         class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500" />
                 </div>
                 <div class="space-y-1">
                     <label class="text-xs font-bold text-slate-400 ml-1">SOYAD</label>
-                    <input type="text" name="surname" value={ c.Surname }
+                    <input type="text" name="surname" value={ c.Surname } minlength="2" maxlength="50"
                         class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500" />
                 </div>
             </div>
 
             <div class="space-y-1">
                 <label class="text-xs font-bold text-slate-400 ml-1">TELEFON</label>
-                <input type="text" name="phone" value={ c.Phone }
+                <input name="phone" value={ c.Phone } type="tel" pattern="[0-9]{10}" maxlength="10"
                     class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500" />
             </div>
 
             <div class="space-y-1">
                 <label class="text-xs font-bold text-slate-400 ml-1">ÜNVAN</label>
-                <textarea name="address" rows="3"
+                <textarea name="address" rows="2" maxlength="255" required
                     class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-orange-500">{ c.Address }</textarea>
             </div>
 
             <div class="flex gap-4 pt-4">
                 <button type="button" onclick="window.loadCustomers()"
-                    class="flex-1 py-4 border border-slate-200 text-slate-500 font-bold rounded-2xl hover:bg-slate-50 transition-all">
+                    class="flex-1 py-2 border border-slate-200 text-slate-500 font-bold rounded-2xl hover:bg-slate-50 transition-all">
                     Ləğv Et
                 </button>
                 <button type="button" onclick="window.saveCustomer()"
-                    class="flex-[2] bg-orange-600 text-white py-4 rounded-2xl font-bold shadow-lg hover:bg-orange-700 transition-all">
+                    class="flex-[2] bg-orange-600 text-white py-2 rounded-2xl font-bold shadow-lg hover:bg-orange-700 transition-all">
                     if isEdit {
                         { "Yenilə" }
                     } else {

@@ -1,4 +1,3 @@
-# Dosya ismi yerine "." (mevcut dizin) kullanıyoruz
 MAIN_PATH = .
 BINARY_NAME = desktop
 

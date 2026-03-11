@@ -9,8 +9,10 @@ import {
     GetSaleForm,
     GetDashboard,
     GetSaleList,
-    SetToken, GetPurchaseForm, GetPurchaseList
-} from '../wailsjs/go/main/App';
+    SetToken, GetPurchaseForm, GetPurchaseList,
+    CreateCustomer,
+    UpdateCustomer
+} from '../wailsjs/go/handler/App';
 
 async function init() {
     const savedToken = localStorage.getItem("gf_token");
@@ -83,14 +85,42 @@ window.openCustomerDetails = async (id) => {
     }
 }
 
-window.openCustomerForm = async (id = 0) => {
+window.saveCustomer = async () => {
     try {
-        document.querySelector('#app').innerHTML = await GetCustomerForm(id);
+        const form = document.getElementById("customer-form");
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        const id = data.id ? parseInt(data.id) : 0;
+
+        let result;
+        if (id > 0) {
+            result = await UpdateCustomer(data);
+        } else {
+            result = await CreateCustomer(data);
+        }
+
+        if (result && result.includes("xəta")) {
+            alert(result);
+        } else {
+            window.loadCustomers();
+        }
     } catch (err) {
-        console.error("Musteri yadaraken xeta:", err);
+        console.error("Müştəri yadda saxlanılarkən sistem xətası:", err);
     }
 }
 
+window.openCustomerForm = async (id = 0) => {
+    try {
+        const app = document.querySelector('#app');
+        app.innerHTML = '<div class="text-center p-10 text-slate-400">Yüklənir...</div>';
+
+        const formHtml = await GetCustomerForm(id);
+        app.innerHTML = formHtml;
+    } catch (err) {
+        console.error("Form açılarkən xəta:", err);
+    }
+}
 
 window.openSaleForm = async (id = 0) => {
     try {

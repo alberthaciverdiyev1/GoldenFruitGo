@@ -1,9 +1,12 @@
 package main
 
 import (
+	"desktop/internal/handlers"
 	"embed"
+	"fmt"
+	"log"
 
-	apiserver "github.com/alberthaciverdiyev1/goldenfruit/cmd/api"
+	apiCmd "github.com/alberthaciverdiyev1/goldenfruit/cmd/api" // Ad toqquşmaması üçün alias
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
@@ -17,11 +20,15 @@ var assets embed.FS
 var appIcon []byte
 
 func main() {
-	go func() {
-		apiserver.Start()
-	}()
+	go apiCmd.Start()
 
-	app := NewApp()
+	log.Println("API portu gözlənilir...")
+	serverPort := <-apiCmd.PortChan
+	apiUrl := fmt.Sprintf("http://127.0.0.1:%d/api/v1", serverPort)
+	log.Printf("Frontend API URL: %s", apiUrl)
+
+	// API URL-i App-ə ötürürük
+	app := handler.NewApp(apiUrl)
 
 	err := wails.Run(&options.App{
 		Title:  "Golden Fruit",
@@ -31,7 +38,7 @@ func main() {
 			Assets: assets,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
+		OnStartup:        app.Startup,
 		Linux: &linux.Options{
 			Icon: appIcon,
 		},
@@ -41,6 +48,6 @@ func main() {
 	})
 
 	if err != nil {
-		println("Error:", err.Error())
+		log.Fatal("Error:", err.Error())
 	}
 }
