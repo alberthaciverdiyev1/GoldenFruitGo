@@ -1,5 +1,29 @@
 export namespace viewModels {
 	
+	export class ProductUpdateVM {
+	    Id: number;
+	    Name: string;
+	    Quantity: number;
+	    BuyingPrice: number;
+	    SellingPrice: number;
+	    Weight: number;
+	    Stock: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ProductUpdateVM(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Id = source["Id"];
+	        this.Name = source["Name"];
+	        this.Quantity = source["Quantity"];
+	        this.BuyingPrice = source["BuyingPrice"];
+	        this.SellingPrice = source["SellingPrice"];
+	        this.Weight = source["Weight"];
+	        this.Stock = source["Stock"];
+	    }
+	}
 	export class UpdateCustomerVM {
 	    id: number;
 	    name: string;

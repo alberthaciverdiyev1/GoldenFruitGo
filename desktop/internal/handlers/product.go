@@ -5,6 +5,8 @@ import (
 	"context"
 	"desktop/internal/viewModels"
 	"desktop/internal/views/product"
+	"fmt"
+	"io"
 )
 
 func (a *App) GetProductListHTML() string {
@@ -28,4 +30,33 @@ func (a *App) ProductForm(id uint64) string {
 	buf := new(bytes.Buffer)
 	product.Form(p, isEdit).Render(context.Background(), buf)
 	return buf.String()
+}
+
+func (a *App) CreateProduct(data viewModels.ProductUpdateVM) string {
+	resp, err := a.API.Post("/products", data)
+	if err != nil {
+		return "Xəta: " + err.Error()
+	}
+	defer resp.Body.Close()
+
+	bodyBytes, _ := io.ReadAll(resp.Body)
+	responseString := string(bodyBytes)
+
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Sprintf("Server xətası (%d): %s", resp.StatusCode, responseString)
+	}
+	return "Success"
+}
+
+//func (a *App) UpdateProduct(data viewModels.ProductUpdateVM) string  {
+//
+//}
+
+func (a *App) ProductDelete(id uint64) string {
+	resp, err := a.API.Delete(fmt.Sprintf("/products/%d", id))
+	if err != nil {
+		return "Xəta: " + err.Error()
+	}
+	resp.Body.Close()
+	return "Success"
 }
