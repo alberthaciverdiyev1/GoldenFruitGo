@@ -17,13 +17,25 @@ import {
 async function init() {
     const savedToken = localStorage.getItem("gf_token");
     const savedUser = localStorage.getItem("gf_user");
+    const loginTime = localStorage.getItem("gf_login_time");
+
+    const expiryLimit = 12 * 60 * 60 * 1000;
+    const now = new Date().getTime();
+
+    if (loginTime && (now - loginTime > expiryLimit)) {
+        console.log("Seansın vaxtı bitdi. Məlumatlar təmizlənir...");
+        localStorage.removeItem("gf_token");
+        localStorage.removeItem("gf_user");
+        localStorage.removeItem("gf_login_time");
+
+        document.querySelector('#app').innerHTML = await GetLoginPageHTML("Seans vaxtı bitdi, yenidən daxil olun.");
+        return;
+    }
 
     if (savedToken && savedUser) {
         console.log("Token tapıldı, avtomatik giriş edilir...");
-
         await SetToken(savedToken);
-
-        loadDashboard(savedUser);
+        loadDashboard(JSON.parse(savedUser));
     } else {
         document.querySelector('#app').innerHTML = await GetLoginPageHTML("");
     }
@@ -36,10 +48,12 @@ window.handleLogin = async () => {
     const res = await DoLogin(u, p);
 
     if (res.success) {
+        const now = new Date().getTime();
         localStorage.setItem("gf_token", res.token);
-        localStorage.setItem("gf_user", res.user);
+        localStorage.setItem("gf_user", JSON.stringify(res.user));
+        localStorage.setItem("gf_login_time", now);
 
-        await window.loadDashboard()
+        await window.loadDashboard();
     } else {
         document.querySelector('#app').innerHTML = await GetLoginPageHTML(res.message);
     }

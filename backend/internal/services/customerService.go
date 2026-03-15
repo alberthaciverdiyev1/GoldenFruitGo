@@ -26,7 +26,8 @@ func (s *CustomerService) GetAll(ctx context.Context, search string) ([]entity.C
 		query = query.Where("name LIKE ? OR surname LIKE ? OR email LIKE ?", searchTerm, searchTerm, searchTerm)
 	}
 
-	err := query.Find(&customers).Error
+	err := query.Order("id DESC").Find(&customers).Error
+
 	return customers, err
 }
 

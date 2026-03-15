@@ -12,7 +12,6 @@ import (
 )
 
 func (a *App) GetCustomerList(search string) string {
-	// 1. API-dan datanı çək (a.API birbaşa app.go-dan gəlir)
 	endpoint := "/customers?search=" + url.QueryEscape(search)
 	resp, err := a.API.Get(endpoint)
 	if err != nil {

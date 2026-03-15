@@ -19,6 +19,10 @@ func Start() {
 	jwtService := services.NewJWTService()
 	customerService := services.NewCustomerService(db)
 	customerHandler := handler.NewCustomerHandler(customerService)
+
+	productService := services.NewProductService(db)
+	productHandler := handler.NewProductHandler(productService)
+
 	authService := services.NewUserService(db, jwtService)
 	authHandler := handler.NewUserHandler(authService)
 
@@ -53,6 +57,16 @@ func Start() {
 			customers.POST("/", customerHandler.Create)
 			customers.PUT("/:id", customerHandler.Update)
 			customers.DELETE("/:id", customerHandler.Delete)
+		}
+
+		products := api.Group("/products")
+		products.Use(middleware.AuthMiddleware(jwtService))
+		{
+			products.GET("/", productHandler.List)
+			products.GET("/:id", productHandler.GetByID)
+			products.POST("/", productHandler.Create)
+			products.PUT("/:id", productHandler.Update)
+			products.DELETE("/:id", productHandler.Delete)
 		}
 	}
 

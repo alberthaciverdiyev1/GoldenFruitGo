@@ -66,7 +66,7 @@ func (h *CustomerHandler) Create(c *gin.Context) {
 func (h *CustomerHandler) Update(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Geçersiz ID formatı"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Kecersiz ID formatı"})
 		return
 	}
 
